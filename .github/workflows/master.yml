@@ -10,20 +10,22 @@ name: Process master branch updates
 on:
   push:
     branches:
-      - master
+      - v2
 
 jobs:
   prepare-master:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          ref: v2
       - run: |
           git config user.name bhoos-devops
           git config user.email devops@bhoos.com
           echo -e "github.com\n  login $GITHUB_TOKEN" >> ~/.netrc
       - uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@bhoos'
 
