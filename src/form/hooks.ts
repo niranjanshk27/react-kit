@@ -38,6 +38,7 @@ export function useFormInput<E = string>(name: string, extractValue?: (evt: E) =
   };
 
   useEffect(() => {
+    // Adding listener to allow updating value using controller.set function
     return controller.listen(name, updateValue);
   }, [controller, name]);
 
