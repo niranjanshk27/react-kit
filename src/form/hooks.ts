@@ -27,15 +27,22 @@ export function useFormValueOf<T extends GenericState>(controller: FormControlle
   return value;
 }
 
-export function useFormInput<E=string>(name: string, extractValue?: (evt: E) => string): [string, (evt: E) => void] {
+export function useFormInput<E = string>(name: string, extractValue?: (evt: E) => string): [string, (evt: E) => void] {
   const controller = useContext(FormContext);
   const [value, setValue] = useState(controller.getInput(name));
 
-  return [value, (newValue: E) => {
+  const updateValue = (newValue: E) => {
     const k = extractValue ? extractValue(newValue) : newValue as never as string;
     controller.setInput(name, k);
     setValue(k);
-  }];
+  };
+
+  useEffect(() => {
+    // Adding listener to allow updating value using controller.set function
+    return controller.listen(name, updateValue);
+  }, [controller, name]);
+
+  return [value, updateValue];
 }
 
 export function useFormController<T extends GenericState>(
